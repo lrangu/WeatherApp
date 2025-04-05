@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather App</title>
+</head>
+<body>
+  <h1>Weather Checker</h1>
+  <form id="weather-form">
+    <input type="text" id="city" placeholder="Enter a city" required>
+    <button type="submit">Get Weather</button>
+  </form>
+
+  <div id="result" style="margin-top: 20px;"></div>
+
+  <script>
+    const form = document.getElementById("weather-form");
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const city = document.getElementById("city").value;
+
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/weather?city=${city}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById("result").innerHTML = `
+            <p><strong>City:</strong> ${data.city}</p>
+            <p><strong>Temperature:</strong> ${data.temperature}</p>
+            <p><strong>Condition:</strong> ${data.condition}</p>
+            <p><strong>Humidity:</strong> ${data.humidity}</p>
+            <p><strong>Wind Speed:</strong> ${data.wind_speed}</p>
+          `;
+        } else {
+          document.getElementById("result").innerText = data.detail;
+        }
+      } catch (error) {
+        document.getElementById("result").innerText = "Failed to fetch weather data.";
+      }
+    });
+  </script>
+</body>
+</html>
